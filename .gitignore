@@ -132,7 +132,6 @@ app.*.map.json
 *.freezed.dart
 lib/generated/*
 lib/src/version.dart
-Makefile
 firebase.json
 .gitignore
 .fvmrc
