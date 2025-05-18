@@ -1,9 +1,10 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:bloc/bloc.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rtm/utils/rtm_config.dart';
+import 'package:rtm/utils/singletons.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AppBlocObserver extends BlocObserver {
@@ -28,12 +29,17 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
   };
 
   Bloc.observer = const AppBlocObserver();
-  await  Supabase.initialize(
+  await Supabase.initialize(
     url: RtmConfig.instance!.values.urlScheme,
     anonKey: RtmConfig.instance!.values.supabaseAnonKey,
   );
 
   // Add cross-flavor configuration here
 
-  runApp(await builder());
+  runApp(
+    MultiBlocProvider(
+      providers: Singletons.registerCubits(),
+      child: await builder(),
+    ),
+  );
 }
