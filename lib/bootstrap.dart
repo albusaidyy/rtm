@@ -24,16 +24,23 @@ class AppBlocObserver extends BlocObserver {
 }
 
 Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  final supabaseUrl =
+      '${RtmConfig.instance!.values.urlScheme}://${RtmConfig.instance!.values.baseDomain}/';
+
+  await Supabase.initialize(
+    url: supabaseUrl,
+    anonKey: RtmConfig.instance!.values.supabaseAnonKey,
+  );
+
   FlutterError.onError = (details) {
     log(details.exceptionAsString(), stackTrace: details.stack);
   };
 
-  Bloc.observer = const AppBlocObserver();
-  await Supabase.initialize(
-    url: RtmConfig.instance!.values.urlScheme,
-    anonKey: RtmConfig.instance!.values.supabaseAnonKey,
-  );
+  setupSingletons();
 
+  Bloc.observer = const AppBlocObserver();
   // Add cross-flavor configuration here
 
   runApp(

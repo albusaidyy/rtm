@@ -1,13 +1,13 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:rtm/features/visit_tracker/data/services/visit_service.dart';
 import 'package:rtm/features/visit_tracker/visits/data/models/visit.dart';
 
-part 'get_visits_cubit.freezed.dart';
 part 'get_visits_state.dart';
+part 'get_visits_cubit.freezed.dart';
 
 class GetVisitsCubit extends Cubit<GetVisitsState> {
-  GetVisitsCubit(VisitService visitService)
+  GetVisitsCubit({required VisitService visitService})
       : super(const GetVisitsState.initial()) {
     _visitService = visitService;
   }
@@ -16,7 +16,11 @@ class GetVisitsCubit extends Cubit<GetVisitsState> {
 
   Future<void> getVisits() async {
     emit(const GetVisitsState.loading());
-    final visits = await _visitService.getVisits();
-    emit(GetVisitsState.loaded(visits));
+    try {
+      final visits = await _visitService.getVisits();
+      emit(GetVisitsState.loaded(visits));
+    } catch (e) {
+      emit(const GetVisitsState.error('Oops! Something went wrong'));
+    }
   }
 }

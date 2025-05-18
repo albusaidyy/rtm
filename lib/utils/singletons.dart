@@ -12,7 +12,8 @@ void setupSingletons() {
 class Singletons {
   static List<BlocProvider> registerCubits() => [
         BlocProvider(
-          create: (context) => GetVisitsCubit(getIt<VisitService>()),
+          create: (context) =>
+              GetVisitsCubit(visitService: getIt<VisitService>()),
         ),
       ];
 }

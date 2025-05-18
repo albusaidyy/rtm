@@ -1,9 +1,9 @@
 part of 'get_visits_cubit.dart';
 
 @freezed
-abstract class GetVisitsState with _$GetVisitsState {
+sealed class GetVisitsState with _$GetVisitsState {
   const factory GetVisitsState.initial() = _Initial;
   const factory GetVisitsState.loading() = _Loading;
-  const factory GetVisitsState.loaded(Visits visits) = _Loaded;
+  const factory GetVisitsState.loaded(List<Visit> visits) = _Loaded;
   const factory GetVisitsState.error(String message) = _Error;
 }
