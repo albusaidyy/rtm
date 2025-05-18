@@ -7,11 +7,11 @@ Future<void> main() async {
   RtmConfig(
     values: RtmValues(
       urlScheme: 'https',
-      baseDomain: 'ilepmczykpyzxpuqgtxa.supabase.co',
-      supabaseAnonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.'
-          'eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlsZXBtY3p5a3B5enhwdXFndHhhIiwicm9s'
-          'ZSI6ImFub24iLCJpYXQiOjE3NDc0Nzk5OTAsImV4cCI6MjA2MzA1NTk5MH0.'
-          '-WeFVY8Wwg0_9X1bkvQwnktGLc99qkEfnMevDtbZA8Q',
+      baseDomain: 'kqgbftwsodpttpqgqnbh.supabase.co',
+      supabaseAnonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYm'
+          'FzZSIsInJlZiI6ImtxZ2JmdHdzb2RwdHRwcWdxbmJoIiwicm9sZSI6ImFub24'
+          'iLCJpYXQiOjE3NDU5ODk5OTksImV4cCI6MjA2MTU2NTk5OX0.rwJSY4bJaNdB'
+          '8jDn3YJJu_gKtznzm-dUKQb4OvRtP6c',
       hiveDBKey: 'rtm_2050',
       primaryHiveDBKey: 'rtm_pr2050',
     ),
