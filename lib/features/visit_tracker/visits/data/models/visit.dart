@@ -19,25 +19,9 @@ abstract class Visit with _$Visit {
 }
 
 @freezed
-abstract class Activity with _$Activity {
-  factory Activity({
-    required int id,
-    required String description,
-    @JsonKey(name: 'created_at') required String createdAt,
-  }) = _Activity;
-
-  factory Activity.fromJson(Map<String, dynamic> json) =>
-      _$ActivityFromJson(json);
-}
-
-@freezed
-abstract class CustomerItem with _$CustomerItem {
-  factory CustomerItem({
-    required int id,
-    required String name,
-    @JsonKey(name: 'created_at') required String createdAt,
-  }) = _CustomerItem;
-
-  factory CustomerItem.fromJson(Map<String, dynamic> json) =>
-      _$CustomerItemFromJson(json);
+abstract class Visits with _$Visits {
+  factory Visits({
+    required List<Visit> visits,
+  }) = _Visits;
+  factory Visits.fromJson(Map<String, dynamic> json) => _$VisitsFromJson(json);
 }
