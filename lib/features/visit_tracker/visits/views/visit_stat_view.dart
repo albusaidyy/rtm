@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:rtm/utils/color_palette.dart';
 import 'package:rtm/utils/extensions.dart';

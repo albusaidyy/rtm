@@ -1,13 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rtm/features/visit_tracker/add_visit/form_field_label.dart';
 import 'package:rtm/features/visit_tracker/add_visit/input_form_field.dart';
 import 'package:rtm/shared/views/single_title_app_bar.dart';
 import 'package:rtm/utils/_index.dart';
-import 'package:rtm/utils/color_palette.dart';
-import 'package:rtm/utils/rtm_router.dart';
 
 class AddOrUpdateVisit extends StatefulWidget {
   const AddOrUpdateVisit({this.isEdit = false, super.key});
@@ -65,7 +62,7 @@ class _AddOrUpdateVisitState extends State<AddOrUpdateVisit> {
               color: AppTheme.kBackgroundColor,
               child: InputFormField(
                 hintText:
-                    'Tap to select ${widget.isEdit ? 'Customer' : 'Customer Name'}',
+                    '''Tap to select ${widget.isEdit ? 'Customer' : 'Customer Name'}''',
                 controller: _customerNameController,
                 readOnly: true,
                 suffixIcon: const Icon(
@@ -153,7 +150,7 @@ class _AddOrUpdateVisitState extends State<AddOrUpdateVisit> {
             //       ),
             //   ],
             // ),
-           
+
             const SizedBox(height: 15),
             const FormFieldLabel(
               label: 'Notes',

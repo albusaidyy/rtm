@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rtm/counter/cubit/counter_cubit.dart';
+import 'package:rtm/features/visit_tracker/cubit/_index.dart';
 import 'package:rtm/features/visit_tracker/data/_index.dart';
 import 'package:rtm/features/visit_tracker/visits/cubit/get_visits_cubit.dart';
 import 'package:rtm/features/visit_tracker/visits/data/services/visit_service.dart';
@@ -53,7 +54,15 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
         BlocProvider(
           create: (_) => GetVisitsCubit(
             visitService: getIt<VisitService>(),
+          ),
+        ),
+        BlocProvider(
+          create: (_) => GetCustomersCubit(
             customerService: getIt<CustomerService>(),
+          ),
+        ),
+        BlocProvider(
+          create: (_) => GetActivitiesCubit(
             activityService: getIt<ActivityService>(),
           ),
         ),

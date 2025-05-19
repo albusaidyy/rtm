@@ -71,7 +71,6 @@ class _SelectStatusPageState extends State<SelectStatusPage> {
               onTap: () {
                 GoRouter.of(context).pop();
                 widget.selectedStatus(status.name);
-                
               },
             ),
           ],

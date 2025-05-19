@@ -10,7 +10,7 @@ abstract class Visit with _$Visit {
     @JsonKey(name: 'customer_id') required int customerId,
     required String status,
     required String location,
-    @JsonKey(name: 'activities_done')  List<String>? activitiesDone,
+    @JsonKey(name: 'activities_done') List<String>? activitiesDone,
     @JsonKey(name: 'visit_date') String? visitDate,
     String? notes,
     @JsonKey(name: 'created_at') String? createdAt,

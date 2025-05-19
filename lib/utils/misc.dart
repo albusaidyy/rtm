@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:rtm/features/visit_tracker/data/_index.dart';
 import 'package:rtm/features/visit_tracker/visits/data/models/visit.dart';
 import 'package:rtm/utils/color_palette.dart';
 
@@ -49,5 +50,38 @@ class Misc {
     if (total == 0) return 0;
     final count = countStatus(visits, status);
     return (count / total) * 100;
+  }
+
+  static List<CustomerVisit> mapVisists({
+    required List<Visit> visits,
+    required List<Customer> customers,
+    required List<Activity> activities,
+  }) {
+    return visits.map((visit) {
+      final customer =
+          customers.firstWhere((customer) => customer.id == visit.customerId);
+
+      final activitiesDone = visit.activitiesDone
+              ?.map(
+                (activityId) => activities
+                    .firstWhere(
+                      (activity) => activity.id == int.parse(activityId),
+                    )
+                    .description,
+              )
+              .toList() ??
+          <String>[];
+
+      return CustomerVisit(
+        id: visit.id,
+        customerName: customer.name,
+        status: visit.status,
+        location: visit.location,
+        activitiesDone: activitiesDone,
+        visitDate: visit.visitDate ?? '',
+        notes: visit.notes ?? '',
+        createdAt: visit.createdAt ?? '',
+      );
+    }).toList();
   }
 }
