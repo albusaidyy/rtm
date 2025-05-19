@@ -23,8 +23,6 @@ class _VisitsPageState extends State<VisitsPage> {
   final visitsNotifier = ValueNotifier<List<CustomerVisit>>([]);
   final searchNotifier = ValueNotifier<List<CustomerVisit>>([]);
 
-  static final Map<int, bool> _expandedStates = {};
-
   @override
   void initState() {
     super.initState();
@@ -188,15 +186,6 @@ class _VisitsPageState extends State<VisitsPage> {
                                                       displayList[index];
                                                   return VisitCard(
                                                     visit: visit,
-                                                    isExpanded: _expandedStates[
-                                                            visit.id] ??
-                                                        true,
-                                                    onToggle: (expanded) {
-                                                      setState(() {
-                                                        _expandedStates[visit
-                                                            .id] = expanded;
-                                                      });
-                                                    },
                                                   );
                                                 },
                                               );

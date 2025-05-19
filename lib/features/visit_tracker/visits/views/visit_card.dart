@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:rtm/features/visit_tracker/visits/data/models/edit_visit_dto.dart';
 import 'package:rtm/features/visit_tracker/visits/data/models/visit.dart';
+import 'package:rtm/utils/_index.dart' show RtmRouter;
 import 'package:rtm/utils/color_palette.dart';
 import 'package:rtm/utils/misc.dart';
 
 class VisitCard extends StatefulWidget {
   const VisitCard({
     required this.visit,
-    required this.isExpanded,
-    required this.onToggle,
     super.key,
   });
 
   final CustomerVisit visit;
-  final bool isExpanded;
-  final ValueChanged<bool> onToggle;
 
   @override
   State<VisitCard> createState() => _VisitCardState();
@@ -79,53 +78,22 @@ class _VisitCardState extends State<VisitCard> {
                         ),
                         IconButton(
                           onPressed: () {
-                            widget.onToggle(!widget.isExpanded);
+                            final editVisitDTO = EditVisitDTO(
+                              visit: widget.visit,
+                              isEdit: true,
+                            );
+                            GoRouter.of(context).push(
+                              RtmRouter.addOrUpdateVisit,
+                              extra: editVisitDTO,
+                            );
                           },
-                          icon: widget.isExpanded
-                              ? const Icon(Icons.expand_less)
-                              : const Icon(Icons.expand_more),
+                          icon: const Icon(
+                            Icons.arrow_forward_ios,
+                            size: 16,
+                          ),
                         ),
                       ],
                     ),
-                    if (widget.isExpanded)
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          if (widget.visit.activitiesDone.isNotEmpty)
-                            ...widget.visit.activitiesDone.map(
-                              (activity) => Padding(
-                                padding: const EdgeInsets.only(bottom: 4),
-                                child: Row(
-                                  spacing: 4,
-                                  children: [
-                                    const Icon(
-                                      Icons.check,
-                                      color: Colors.green,
-                                      size: 16,
-                                    ),
-                                    Text(
-                                      activity,
-                                      style: const TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            )
-                          else
-                            const Text(
-                              '---',
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                        ],
-                      )
-                    else
-                      const SizedBox.shrink(),
                   ],
                 ),
                 RichText(

@@ -12,6 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_bloc: ^9.0.0
+  flutter_launcher_icons: ^0.14.3
   flutter_localizations:
     sdk: flutter
   freezed: ^2.5.2
@@ -35,6 +36,8 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   generate: true
+  assets:
+    - assets/app_icon/
   fonts:
     - family: Graphik
       fonts:

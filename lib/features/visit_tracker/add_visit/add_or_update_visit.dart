@@ -6,13 +6,19 @@ import 'package:rtm/features/visit_tracker/add_visit/form_field_label.dart';
 import 'package:rtm/features/visit_tracker/add_visit/input_form_field.dart';
 import 'package:rtm/features/visit_tracker/cubit/_index.dart';
 import 'package:rtm/features/visit_tracker/data/_index.dart';
+import 'package:rtm/features/visit_tracker/visits/data/models/visit.dart';
 import 'package:rtm/shared/views/_index.dart';
 import 'package:rtm/utils/_index.dart';
 
 class AddOrUpdateVisit extends StatefulWidget {
-  const AddOrUpdateVisit({this.isEdit = false, super.key});
+  const AddOrUpdateVisit({
+    this.isEdit = false,
+    this.visit,
+    super.key,
+  });
 
   final bool isEdit;
+  final CustomerVisit? visit;
 
   @override
   State<AddOrUpdateVisit> createState() => _AddOrUpdateVisitState();
@@ -28,6 +34,33 @@ class _AddOrUpdateVisitState extends State<AddOrUpdateVisit> {
   late TimeOfDay? pickedTime;
 
   final activitiesDone = <Activity>[];
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.isEdit) {
+      _customerNameController.text = widget.visit?.customerName ?? '';
+      _statusController.text = widget.visit?.status ?? '';
+      _locationController.text = widget.visit?.location ?? '';
+      _notesController.text = widget.visit?.notes ?? '';
+      _visitDateController.text =
+          Misc.formatDate(widget.visit?.visitDate ?? '');
+
+      final fetchedActivities =
+          context.read<GetActivitiesCubit>().state.maybeWhen(
+                orElse: () => <Activity>[],
+                loaded: (activities) => activities,
+              );
+      activitiesDone.addAll(
+        widget.visit?.activitiesDone.map(
+              (e) => fetchedActivities
+                  .firstWhere((activity) => activity.description == e),
+            ) ??
+            <Activity>[],
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -1,14 +1,18 @@
 import 'package:go_router/go_router.dart';
+import 'package:rtm/app/decision/decision.dart';
 import 'package:rtm/features/visit_tracker/add_visit/add_or_update_visit.dart';
 import 'package:rtm/features/visit_tracker/add_visit/select_customer_dropdown.dart';
 import 'package:rtm/features/visit_tracker/add_visit/select_status.dart';
 import 'package:rtm/features/visit_tracker/data/_index.dart';
+import 'package:rtm/features/visit_tracker/visits/data/models/edit_visit_dto.dart';
 import 'package:rtm/features/visit_tracker/visits/visits_page.dart';
 
 class RtmRouter {
   static GoRouter get router => _router;
 
-  static const visits = '/';
+  static const decision = '/';
+
+  static const visits = '/visits';
   static const addOrUpdateVisit = '/add-or-update-visit';
   static const selectStatus = '/select-status';
   static const selectCustomer = '/select-customer';
@@ -16,6 +20,11 @@ class RtmRouter {
   static final _router = GoRouter(
     initialLocation: '/',
     routes: [
+      GoRoute(
+        path: decision,
+        name: decision,
+        builder: (context, state) => const DecisionPage(),
+      ),
       GoRoute(
         path: visits,
         name: visits,
@@ -25,9 +34,11 @@ class RtmRouter {
         path: addOrUpdateVisit,
         name: addOrUpdateVisit,
         builder: (context, state) {
-          final isEdit = state.extra as bool?;
+          final editVisitDTO = state.extra as EditVisitDTO?;
+
           return AddOrUpdateVisit(
-            isEdit: isEdit ?? false,
+            isEdit: editVisitDTO?.isEdit ?? false,
+            visit: editVisitDTO?.visit,
           );
         },
       ),
