@@ -1,9 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rtm/features/visit_tracker/add_visit/form_field_label.dart';
 import 'package:rtm/features/visit_tracker/add_visit/input_form_field.dart';
-import 'package:rtm/shared/views/single_title_app_bar.dart';
+import 'package:rtm/features/visit_tracker/cubit/_index.dart';
+import 'package:rtm/features/visit_tracker/data/_index.dart';
+import 'package:rtm/shared/views/_index.dart';
 import 'package:rtm/utils/_index.dart';
 
 class AddOrUpdateVisit extends StatefulWidget {
@@ -23,6 +26,8 @@ class _AddOrUpdateVisitState extends State<AddOrUpdateVisit> {
   final TextEditingController _visitDateController = TextEditingController();
   late DateTime? pickedDate;
   late TimeOfDay? pickedTime;
+
+  final activitiesDone = <Activity>[];
 
   @override
   Widget build(BuildContext context) {
@@ -58,19 +63,37 @@ class _AddOrUpdateVisitState extends State<AddOrUpdateVisit> {
               isRequired: true,
             ),
             const SizedBox(height: 10),
-            ColoredBox(
-              color: AppTheme.kBackgroundColor,
-              child: InputFormField(
-                hintText:
-                    '''Tap to select ${widget.isEdit ? 'Customer' : 'Customer Name'}''',
-                controller: _customerNameController,
-                readOnly: true,
-                suffixIcon: const Icon(
-                  Icons.expand_more,
-                ),
-                keyboardType: TextInputType.name,
-                // Only letters
-              ),
+            BlocBuilder<GetCustomersCubit, GetCustomersState>(
+              builder: (context, state) {
+                return state.maybeWhen(
+                  orElse: () => const SizedBox.shrink(),
+                  error: (error) => FetchErrorWidget(
+                    error: error,
+                    onRetry: () {
+                      context.read<GetCustomersCubit>().getCustomers();
+                    },
+                  ),
+                  loaded: (customers) => InputFormField(
+                    hintText:
+                        '''Tap to select ${widget.isEdit ? 'Customer' : 'Customer Name'}''',
+                    controller: _customerNameController,
+                    readOnly: true,
+                    suffixIcon: const Icon(
+                      Icons.expand_more,
+                    ),
+                    onTap: () {
+                      GoRouter.of(context).push(
+                        RtmRouter.selectCustomer,
+                        extra: (Customer customer) {
+                          setState(() {
+                            _customerNameController.text = customer.name;
+                          });
+                        },
+                      );
+                    },
+                  ),
+                );
+              },
             ),
             const SizedBox(height: 15),
             const FormFieldLabel(
@@ -122,35 +145,43 @@ class _AddOrUpdateVisitState extends State<AddOrUpdateVisit> {
               isRequired: false,
             ),
             const SizedBox(height: 10),
-            // Column(
-            //   crossAxisAlignment: CrossAxisAlignment.start,
-            //   children: [
-            //     if (widget.visit.activitiesDone.isNotEmpty)
-            //       ...widget.visit.activitiesDone.map(
-            //         (activity) => Padding(
-            //           padding: const EdgeInsets.only(bottom: 4),
-            //           child: Row(
-            //             spacing: 4,
-            //             children: [
-            //               const Icon(
-            //                 Icons.check,
-            //                 color: Colors.green,
-            //                 size: 16,
-            //               ),
-            //               Text(
-            //                 activity,
-            //                 style: const TextStyle(
-            //                   fontSize: 12,
-            //                   fontWeight: FontWeight.w500,
-            //                 ),
-            //               ),
-            //             ],
-            //           ),
-            //         ),
-            //       ),
-            //   ],
-            // ),
-
+            BlocBuilder<GetActivitiesCubit, GetActivitiesState>(
+              builder: (context, state) {
+                return state.maybeWhen(
+                  orElse: () => const SizedBox.shrink(),
+                  error: (error) => FetchErrorWidget(
+                    error: error,
+                    onRetry: () {
+                      context.read<GetActivitiesCubit>().getActivities();
+                    },
+                  ),
+                  loaded: (activities) {
+                    return Column(
+                      children: [
+                        ...activities.map((activity) {
+                          return CheckboxListTile(
+                            dense: true,
+                            contentPadding:
+                                const EdgeInsets.symmetric(horizontal: 8),
+                            title: Text(activity.description),
+                            value: activitiesDone.contains(activity),
+                            onChanged: (value) {
+                              setState(() {
+                                if (value ?? false) {
+                                  activitiesDone.add(activity);
+                                } else {
+                                  activitiesDone.remove(activity);
+                                }
+                              });
+                            },
+                          );
+                        }),
+                      ],
+                    );
+                  },
+                );
+              },
+            ),
             const SizedBox(height: 15),
             const FormFieldLabel(
               label: 'Notes',
@@ -215,6 +246,7 @@ class _AddOrUpdateVisitState extends State<AddOrUpdateVisit> {
                 },
               ),
             ),
+            const SizedBox(height: 50),
           ],
         ),
       ),

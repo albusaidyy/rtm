@@ -1,6 +1,8 @@
 import 'package:go_router/go_router.dart';
 import 'package:rtm/features/visit_tracker/add_visit/add_or_update_visit.dart';
+import 'package:rtm/features/visit_tracker/add_visit/select_customer_dropdown.dart';
 import 'package:rtm/features/visit_tracker/add_visit/select_status.dart';
+import 'package:rtm/features/visit_tracker/data/_index.dart';
 import 'package:rtm/features/visit_tracker/visits/visits_page.dart';
 
 class RtmRouter {
@@ -9,6 +11,7 @@ class RtmRouter {
   static const visits = '/';
   static const addOrUpdateVisit = '/add-or-update-visit';
   static const selectStatus = '/select-status';
+  static const selectCustomer = '/select-customer';
 
   static final _router = GoRouter(
     initialLocation: '/',
@@ -35,6 +38,17 @@ class RtmRouter {
           final selectedStatus = state.extra! as void Function(String status);
           return SelectStatusPage(
             selectedStatus: selectedStatus,
+          );
+        },
+      ),
+      GoRoute(
+        path: selectCustomer,
+        name: selectCustomer,
+        builder: (context, state) {
+          final selectedCustomer =
+              state.extra! as void Function(Customer customer);
+          return SelectCustomerDropdown(
+            selectedCustomer: selectedCustomer,
           );
         },
       ),
