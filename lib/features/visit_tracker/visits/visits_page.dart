@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:rtm/features/visit_tracker/visits/cubit/get_visits_cubit.dart';
 import 'package:rtm/features/visit_tracker/visits/data/models/visit.dart';
 import 'package:rtm/features/visit_tracker/visits/views/_index.dart';
@@ -7,6 +9,7 @@ import 'package:rtm/shared/views/search_form_field.dart';
 import 'package:rtm/shared/views/single_title_app_bar.dart';
 import 'package:rtm/utils/color_palette.dart';
 import 'package:rtm/utils/misc.dart';
+import 'package:rtm/utils/rtm_router.dart';
 
 class VisitsPage extends StatefulWidget {
   const VisitsPage({super.key});
@@ -47,16 +50,44 @@ class _VisitsPageState extends State<VisitsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.kBackgroundColor,
-      appBar: const SingleTitleAppBar(
+      appBar: SingleTitleAppBar(
         title: 'Visits',
         isHome: true,
+        actions: [
+          TextButton(
+            onPressed: () =>
+                GoRouter.of(context).push(RtmRouter.addOrUpdateVisit),
+            child: const Row(
+              children: [
+                Icon(
+                  CupertinoIcons.add,
+                  color: AppTheme.kPrimaryColor,
+                ),
+                Text(
+                  'Add',
+                  style: TextStyle(
+                    fontFamily: 'Graphik',
+                    color: AppTheme.kPrimaryColor,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
       body: BlocBuilder<GetVisitsCubit, GetVisitsState>(
         builder: (context, state) {
           return state.maybeWhen(
             orElse: () => const Center(child: CircularProgressIndicator()),
             initial: () => const SizedBox.shrink(),
-            loading: () => const Center(child: CircularProgressIndicator()),
+            loading: () => const Center(
+              child: CircularProgressIndicator(
+                color: AppTheme.kPrimaryColor,
+              ),
+            ),
             loaded: (customerVisits) {
               final completedPercent =
                   Misc.getStatusPercent(customerVisits, 'completed');

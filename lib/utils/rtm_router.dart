@@ -1,10 +1,14 @@
 import 'package:go_router/go_router.dart';
+import 'package:rtm/features/visit_tracker/add_visit/add_or_update_visit.dart';
+import 'package:rtm/features/visit_tracker/add_visit/select_status.dart';
 import 'package:rtm/features/visit_tracker/visits/visits_page.dart';
 
 class RtmRouter {
   static GoRouter get router => _router;
 
   static const visits = '/';
+  static const addOrUpdateVisit = '/add-or-update-visit';
+  static const selectStatus = '/select-status';
 
   static final _router = GoRouter(
     initialLocation: '/',
@@ -13,6 +17,26 @@ class RtmRouter {
         path: visits,
         name: visits,
         builder: (context, state) => const VisitsPage(),
+      ),
+      GoRoute(
+        path: addOrUpdateVisit,
+        name: addOrUpdateVisit,
+        builder: (context, state) {
+          final isEdit = state.extra as bool?;
+          return AddOrUpdateVisit(
+            isEdit: isEdit ?? false,
+          );
+        },
+      ),
+      GoRoute(
+        path: selectStatus,
+        name: selectStatus,
+        builder: (context, state) {
+          final selectedStatus = state.extra! as void Function(String status);
+          return SelectStatusPage(
+            selectedStatus: selectedStatus,
+          );
+        },
       ),
     ],
   );

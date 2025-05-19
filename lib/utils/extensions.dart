@@ -1,5 +1,5 @@
-
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 extension OpacityParsing on Color {
   // .addOpacity() has been depreciated
@@ -11,4 +11,11 @@ extension OpacityParsing on Color {
     }
     return this;
   }
+}
+
+extension DateTimeExtensions on DateTime {
+  /// Returns a formatted string of the date in the format 'MMMM d, y'.
+  /// Suitable for display purposes
+  String toDateDisplayFormat() =>
+      DateFormat('EEEE, MMMM d, yyyy - hh:mm a').format(this);
 }

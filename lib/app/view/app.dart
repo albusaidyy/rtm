@@ -11,7 +11,7 @@ class App extends StatelessWidget {
     return MaterialApp.router(
       theme: ThemeData(
         fontFamily: 'Helvetica Neue',
-        useMaterial3: true,
+        useMaterial3: false,
         appBarTheme: const AppBarTheme(
           color: AppTheme.kBackgroundColor,
           foregroundColor: AppTheme.kBlackColor,
