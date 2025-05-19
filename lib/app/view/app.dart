@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rtm/l10n/l10n.dart';
+import 'package:rtm/utils/color_palette.dart';
 import 'package:rtm/utils/rtm_router.dart';
 
 class App extends StatelessWidget {
@@ -9,10 +10,12 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       theme: ThemeData(
-        appBarTheme: AppBarTheme(
-          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        ),
+        fontFamily: 'Helvetica Neue',
         useMaterial3: true,
+        appBarTheme: const AppBarTheme(
+          color: AppTheme.kBackgroundColor,
+          foregroundColor: AppTheme.kBlackColor,
+        ),
       ),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
