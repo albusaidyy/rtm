@@ -120,14 +120,37 @@ class _VisitCardState extends State<VisitCard> {
                       const SizedBox.shrink(),
                   ],
                 ),
+                RichText(
+                  text: TextSpan(
+                    children: [
+                      const TextSpan(
+                        text: 'Notes: ',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.grey,
+                        ),
+                      ),
+                      TextSpan(
+                        text: widget.visit.notes ?? '---',
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     RichText(
                       text: TextSpan(
                         children: [
                           const TextSpan(
-                            text: 'Notes: ',
+                            text: 'Visited on: ',
                             style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
@@ -135,7 +158,7 @@ class _VisitCardState extends State<VisitCard> {
                             ),
                           ),
                           TextSpan(
-                            text: widget.visit.notes ?? '---',
+                            text: Misc.formatDate(widget.visit.visitDate),
                             style: const TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
@@ -167,29 +190,6 @@ class _VisitCardState extends State<VisitCard> {
                     ),
                   ],
                 ),
-                  RichText(
-                      text: TextSpan(
-                        children: [
-                          const TextSpan(
-                            text: 'Visited on: ',
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.grey,
-                            ),
-                          ),
-                          TextSpan(
-                            text: Misc.formatDate(widget.visit.visitDate),
-                            style: const TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                   
               ],
             ),
           ),
