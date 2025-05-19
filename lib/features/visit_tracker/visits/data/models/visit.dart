@@ -17,3 +17,19 @@ abstract class Visit with _$Visit {
   }) = _Visit;
   factory Visit.fromJson(Map<String, dynamic> json) => _$VisitFromJson(json);
 }
+
+@freezed
+abstract class CustomerVisit with _$CustomerVisit {
+  factory CustomerVisit({
+    required int id,
+    required String customerName,
+    required String status,
+    required String location,
+    @Default([]) List<String> activitiesDone,
+    @Default('') String visitDate,
+    @Default('') String notes,
+    @Default('') String createdAt,
+  }) = _CustomerVisit;
+  factory CustomerVisit.fromJson(Map<String, dynamic> json) =>
+      _$CustomerVisitFromJson(json);
+}

@@ -5,7 +5,7 @@ import 'package:rtm/utils/color_palette.dart';
 
 class Misc {
   static String formatDate(String? date) {
-    if (date == null) {
+    if (date == null || date.isEmpty) {
       return 'No date available';
     }
     return DateFormat('EEEE, MMMM d, yyyy - hh:mm a')
@@ -38,13 +38,13 @@ class Misc {
     }
   }
 
-  static int countStatus(List<Visit> visits, String status) {
+  static int countStatus(List<CustomerVisit> visits, String status) {
     return visits
         .where((v) => v.status.toLowerCase() == status.toLowerCase())
         .length;
   }
 
-  static double getStatusPercent(List<Visit> visits, String status) {
+  static double getStatusPercent(List<CustomerVisit> visits, String status) {
     final total = visits.length;
     if (total == 0) return 0;
     final count = countStatus(visits, status);

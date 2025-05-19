@@ -11,7 +11,7 @@ class VisitCard extends StatefulWidget {
     super.key,
   });
 
-  final Visit visit;
+  final CustomerVisit visit;
   final bool isExpanded;
   final ValueChanged<bool> onToggle;
 
@@ -49,9 +49,9 @@ class _VisitCardState extends State<VisitCard> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      'Qustomer Name',
-                      style: TextStyle(
+                    Text(
+                      widget.visit.customerName,
+                      style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
                         fontFamily: 'Graphik',
@@ -91,29 +91,37 @@ class _VisitCardState extends State<VisitCard> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          ...widget.visit.activitiesDone?.map(
-                                (activity) => Padding(
-                                  padding: const EdgeInsets.only(bottom: 4),
-                                  child: Row(
-                                    spacing: 4,
-                                    children: [
-                                      const Icon(
-                                        Icons.check,
-                                        color: Colors.green,
-                                        size: 16,
+                          if (widget.visit.activitiesDone.isNotEmpty)
+                            ...widget.visit.activitiesDone.map(
+                              (activity) => Padding(
+                                padding: const EdgeInsets.only(bottom: 4),
+                                child: Row(
+                                  spacing: 4,
+                                  children: [
+                                    const Icon(
+                                      Icons.check,
+                                      color: Colors.green,
+                                      size: 16,
+                                    ),
+                                    Text(
+                                      activity,
+                                      style: const TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500,
                                       ),
-                                      Text(
-                                        activity,
-                                        style: const TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
-                              ) ??
-                              [const Text('---')],
+                              ),
+                            )
+                          else
+                            const Text(
+                              '---',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
                         ],
                       )
                     else
@@ -132,7 +140,7 @@ class _VisitCardState extends State<VisitCard> {
                         ),
                       ),
                       TextSpan(
-                        text: widget.visit.notes ?? '---',
+                        text: widget.visit.notes,
                         style: const TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,

@@ -3,17 +3,22 @@ import 'package:get_it/get_it.dart';
 import 'package:rtm/counter/counter.dart';
 import 'package:rtm/features/visit_tracker/data/services/visit_service.dart';
 import 'package:rtm/features/visit_tracker/visits/cubit/get_visits_cubit.dart';
+import 'package:rtm/shared/services/customer_services.dart';
 
 final getIt = GetIt.instance;
 
 void setupSingletons() {
-  getIt.registerSingleton<VisitService>(VisitServiceImpl());
+  getIt..registerSingleton<VisitService>(VisitServiceImpl())
+  ..registerSingleton<CustomerService>(CustomerServiceImpl());
 }
 
 class Singletons {
   static List<BlocProvider> registerCubits() => [
         BlocProvider(
-          create: (_) => GetVisitsCubit(visitService: getIt<VisitService>()),
+          create: (_) => GetVisitsCubit(
+            visitService: getIt<VisitService>(),
+            customerService: getIt<CustomerService>(),
+          ),
         ),
         BlocProvider(
           create: (_) => CounterCubit(),

@@ -17,8 +17,8 @@ class VisitsPage extends StatefulWidget {
 
 class _VisitsPageState extends State<VisitsPage> {
   final _searchController = TextEditingController();
-  final visitsNotifier = ValueNotifier<List<Visit>>([]);
-  final searchNotifier = ValueNotifier<List<Visit>>([]);
+  final visitsNotifier = ValueNotifier<List<CustomerVisit>>([]);
+  final searchNotifier = ValueNotifier<List<CustomerVisit>>([]);
 
   static final Map<int, bool> _expandedStates = {};
 
@@ -36,7 +36,7 @@ class _VisitsPageState extends State<VisitsPage> {
   void searchForm() {
     searchNotifier.value = List.of(
       visitsNotifier.value.where(
-        (element) => element.location
+        (element) => element.customerName
             .toLowerCase()
             .contains(_searchController.text.toLowerCase()),
       ),
@@ -57,15 +57,16 @@ class _VisitsPageState extends State<VisitsPage> {
             orElse: () => const Center(child: CircularProgressIndicator()),
             initial: () => const SizedBox.shrink(),
             loading: () => const Center(child: CircularProgressIndicator()),
-            loaded: (visits) {
+            loaded: (customerVisits) {
               final completedPercent =
-                  Misc.getStatusPercent(visits, 'completed');
+                  Misc.getStatusPercent(customerVisits, 'completed');
 
-              final pendingPercent = Misc.getStatusPercent(visits, 'pending');
+              final pendingPercent =
+                  Misc.getStatusPercent(customerVisits, 'pending');
 
               final cancelledPercent =
-                  Misc.getStatusPercent(visits, 'cancelled');
-              visitsNotifier.value = visits.reversed.toList();
+                  Misc.getStatusPercent(customerVisits, 'cancelled');
+              visitsNotifier.value = customerVisits.reversed.toList();
 
               searchForm();
 
@@ -97,7 +98,7 @@ class _VisitsPageState extends State<VisitsPage> {
                           ),
                         ),
                         Expanded(
-                          child: ValueListenableBuilder<List<Visit>>(
+                          child: ValueListenableBuilder<List<CustomerVisit>>(
                             valueListenable: searchNotifier,
                             builder: (context, displayList, _) {
                               return ListView.builder(

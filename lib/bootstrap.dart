@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rtm/counter/cubit/counter_cubit.dart';
 import 'package:rtm/features/visit_tracker/data/services/visit_service.dart';
 import 'package:rtm/features/visit_tracker/visits/cubit/get_visits_cubit.dart';
+import 'package:rtm/shared/services/customer_services.dart';
 import 'package:rtm/utils/rtm_config.dart';
 import 'package:rtm/utils/singletons.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -50,7 +51,10 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
     MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (_) => GetVisitsCubit(visitService: getIt<VisitService>()),
+          create: (_) => GetVisitsCubit(
+            visitService: getIt<VisitService>(),
+            customerService: getIt<CustomerService>(),
+          ),
         ),
         // TODO(Albusaidy): Remove Provider once done with testing.
         BlocProvider(
