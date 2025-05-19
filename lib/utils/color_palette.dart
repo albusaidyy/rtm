@@ -9,7 +9,7 @@ class AppTheme {
   static const Color kBlackColor = Color(0xff000000);
   static const Color kCompletedColor = Color(0xFF0AC14F);
   static const Color kCancelledColor = Color(0xFFF44336);
-  static const Color kPendingColor = Color(0xFFFFE1B4);
+  static const Color kPendingColor = Color(0xFFE4B368);
   static const Color kLightBlackColor = Color(0x3ECACACA);
   static const Color kErrorColor = Color(0xFFE31D1D);
   static const Color kGreyColor = Color(0xffDEDEDE);

@@ -33,140 +33,145 @@ class _VisitCardState extends State<VisitCard> {
             Misc.formatDate(widget.visit.createdAt),
             style: const TextStyle(fontSize: 12, color: Colors.grey),
           ),
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-            decoration: BoxDecoration(
-              color: AppTheme.kBackgroundColor,
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: AppTheme.kSecondaryGreyColor),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              spacing: 6,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      widget.visit.customerName,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                        fontFamily: 'Graphik',
-                      ),
-                    ),
-                    Text(
-                      widget.visit.location,
-                      style: const TextStyle(fontSize: 12, color: Colors.grey),
-                    ),
-                  ],
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'Activities',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            fontFamily: 'Graphik',
-                          ),
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            final editVisitDTO = EditVisitDTO(
-                              visit: widget.visit,
-                              isEdit: true,
-                            );
-                            GoRouter.of(context).push(
-                              RtmRouter.addOrUpdateVisit,
-                              extra: editVisitDTO,
-                            );
-                          },
-                          icon: const Icon(
-                            Icons.arrow_forward_ios,
-                            size: 16,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                RichText(
-                  text: TextSpan(
+          InkWell(
+            onTap: () {
+              final editVisitDTO = EditVisitDTO(
+                visit: widget.visit,
+                isEdit: true,
+              );
+              GoRouter.of(context).push(
+                RtmRouter.addOrUpdateVisit,
+                extra: editVisitDTO,
+              );
+            },
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+              decoration: BoxDecoration(
+                color: AppTheme.kBackgroundColor,
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: AppTheme.kSecondaryGreyColor),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: 6,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const TextSpan(
-                        text: 'Notes: ',
-                        style: TextStyle(
-                          fontSize: 12,
+                      Text(
+                        widget.visit.customerName,
+                        style: const TextStyle(
+                          fontSize: 15,
                           fontWeight: FontWeight.w600,
-                          color: Colors.grey,
+                          fontFamily: 'Graphik',
                         ),
                       ),
-                      TextSpan(
-                        text: widget.visit.notes,
-                        style: const TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
+                      InkWell(
+                        onTap: () {
+                          final editVisitDTO = EditVisitDTO(
+                            visit: widget.visit,
+                            isEdit: true,
+                          );
+                          GoRouter.of(context).push(
+                            RtmRouter.addOrUpdateVisit,
+                            extra: editVisitDTO,
+                          );
+                        },
+                        child: const Icon(
+                          Icons.edit,
+                          size: 16,
                           color: Colors.grey,
                         ),
                       ),
                     ],
                   ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    RichText(
-                      text: TextSpan(
-                        children: [
-                          const TextSpan(
-                            text: 'Visited on: ',
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.grey,
-                            ),
-                          ),
-                          TextSpan(
-                            text: Misc.formatDate(widget.visit.visitDate),
-                            style: const TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ],
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.location_on,
+                        size: 15,
+                        color: Colors.grey,
                       ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: barColor,
-                        borderRadius: BorderRadius.circular(8),
+                      Text(
+                        widget.visit.location,
+                        style:
+                            const TextStyle(fontSize: 14, color: Colors.grey),
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 4,
-                        ),
-                        child: Text(
-                          widget.visit.status,
-                          style: const TextStyle(
-                            fontSize: 12,
+                    ],
+                  ),
+                  RichText(
+                    text: TextSpan(
+                      children: [
+                        const TextSpan(
+                          text: 'Notes: ',
+                          style: TextStyle(
+                            fontSize: 14,
                             fontWeight: FontWeight.w600,
-                            color: AppTheme.kBlackColor,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        TextSpan(
+                          text: widget.visit.notes,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      RichText(
+                        text: TextSpan(
+                          children: [
+                            const TextSpan(
+                              text: 'Visited on: ',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.grey,
+                              ),
+                            ),
+                            TextSpan(
+                              text: Misc.formatDate(widget.visit.visitDate),
+                              style: const TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: barColor,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          child: Text(
+                            widget.visit.status,
+                            style: const TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                              color: AppTheme.kBackgroundColor,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ],

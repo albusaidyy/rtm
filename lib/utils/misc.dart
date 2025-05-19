@@ -9,7 +9,7 @@ class Misc {
     if (date == null || date.isEmpty) {
       return 'No date available';
     }
-    return DateFormat('EEEE, MMMM d, yyyy - hh:mm a')
+    return DateFormat('EEE, MMMM d, yyyy - hh:mm a')
         .format(DateTime.parse(date));
   }
 

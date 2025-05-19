@@ -174,6 +174,7 @@ class _VisitsPageState extends State<VisitsPage> {
                                             ),
                                           ),
                                         ),
+                                        const SizedBox(height: 15),
                                         Expanded(
                                           child: ValueListenableBuilder<
                                               List<CustomerVisit>>(
