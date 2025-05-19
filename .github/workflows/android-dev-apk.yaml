@@ -65,12 +65,3 @@ jobs:
 
       # - name: Check Code Coverage
       #   uses: VeryGoodOpenSource/very_good_coverage@v1.1.1
-
-      - name: Report Status
-        if: always()
-        uses: ravsamhq/notify-slack-action@v2
-        with:
-          status: ${{ job.status }}
-          notification_title: "{repo}"
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
