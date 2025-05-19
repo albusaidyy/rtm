@@ -34,3 +34,18 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   generate: true
+  fonts:
+    - family: Graphik
+      fonts:
+        - asset: assets/fonts/Graphik/Graphik Medium.otf
+          weight: 500
+        - asset: assets/fonts/Graphik/Graphik Semibold.otf
+        - asset: assets/fonts/Graphik/GraphikBold.otf
+          weight: 700
+    - family: Helvetica Neue
+      fonts:
+        - asset: assets/fonts/Helvetica Neue/Helvetica Neue 67 Medium Condensed.otf
+        - asset: assets/fonts/Helvetica Neue/Helvetica Neue Regular.otf
+          weight: 500
+        - asset: assets/fonts/Helvetica Neue/HelveticaNeue Medium.ttf
+          weight: 600
