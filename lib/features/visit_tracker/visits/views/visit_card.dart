@@ -25,7 +25,7 @@ class _VisitCardState extends State<VisitCard> {
     final barColor = Misc.getStatusColor(widget.visit.status);
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 6,

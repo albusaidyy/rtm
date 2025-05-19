@@ -4,9 +4,9 @@ import 'dart:developer';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rtm/counter/cubit/counter_cubit.dart';
-import 'package:rtm/features/visit_tracker/data/services/visit_service.dart';
+import 'package:rtm/features/visit_tracker/data/_index.dart';
 import 'package:rtm/features/visit_tracker/visits/cubit/get_visits_cubit.dart';
-import 'package:rtm/shared/services/customer_services.dart';
+import 'package:rtm/features/visit_tracker/visits/data/services/visit_service.dart';
 import 'package:rtm/utils/rtm_config.dart';
 import 'package:rtm/utils/singletons.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -54,6 +54,7 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
           create: (_) => GetVisitsCubit(
             visitService: getIt<VisitService>(),
             customerService: getIt<CustomerService>(),
+            activityService: getIt<ActivityService>(),
           ),
         ),
         // TODO(Albusaidy): Remove Provider once done with testing.

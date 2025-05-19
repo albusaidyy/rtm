@@ -108,7 +108,7 @@ class _VisitsPageState extends State<VisitsPage> {
                                   return VisitCard(
                                     visit: visit,
                                     isExpanded:
-                                        _expandedStates[visit.id] ?? false,
+                                        _expandedStates[visit.id] ?? true,
                                     onToggle: (expanded) {
                                       setState(() {
                                         _expandedStates[visit.id] = expanded;
