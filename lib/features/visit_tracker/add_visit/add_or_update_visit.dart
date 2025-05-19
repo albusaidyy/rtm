@@ -36,9 +36,7 @@ class _AddOrUpdateVisitState extends State<AddOrUpdateVisit> {
         title: widget.isEdit ? 'Edit Visit' : 'Add Visit',
         actions: [
           TextButton(
-            onPressed: () {
-              // TODO: Add visit
-            },
+            onPressed: () {},
             child: Text(
               widget.isEdit ? 'Update' : 'Submit',
               style: const TextStyle(
