@@ -1,14 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rtm/features/visit_tracker/add_visit/form_field_label.dart';
 import 'package:rtm/features/visit_tracker/add_visit/input_form_field.dart';
-import 'package:rtm/features/visit_tracker/cubit/_index.dart';
 import 'package:rtm/features/visit_tracker/data/_index.dart';
 import 'package:rtm/features/visit_tracker/visits/data/models/visit.dart';
+import 'package:rtm/shared/services/hive_service.dart';
 import 'package:rtm/shared/views/_index.dart';
 import 'package:rtm/utils/_index.dart';
+import 'package:rtm/utils/singletons.dart';
 
 class AddOrUpdateVisit extends StatefulWidget {
   const AddOrUpdateVisit({
@@ -25,6 +25,9 @@ class AddOrUpdateVisit extends StatefulWidget {
 }
 
 class _AddOrUpdateVisitState extends State<AddOrUpdateVisit> {
+  late List<Activity> fetchedActivities;
+  late List<Customer> fetchedCustomers;
+
   final TextEditingController _customerNameController = TextEditingController();
   final TextEditingController _statusController = TextEditingController();
   final TextEditingController _locationController = TextEditingController();
@@ -39,6 +42,9 @@ class _AddOrUpdateVisitState extends State<AddOrUpdateVisit> {
   void initState() {
     super.initState();
 
+    fetchedActivities = getIt<HiveService>().getActivities();
+    fetchedCustomers = getIt<HiveService>().getCustomers();
+
     if (widget.isEdit) {
       _customerNameController.text = widget.visit?.customerName ?? '';
       _statusController.text = widget.visit?.status ?? '';
@@ -47,11 +53,6 @@ class _AddOrUpdateVisitState extends State<AddOrUpdateVisit> {
       _visitDateController.text =
           Misc.formatDate(widget.visit?.visitDate ?? '');
 
-      final fetchedActivities =
-          context.read<GetActivitiesCubit>().state.maybeWhen(
-                orElse: () => <Activity>[],
-                loaded: (activities) => activities,
-              );
       activitiesDone.addAll(
         widget.visit?.activitiesDone.map(
               (e) => fetchedActivities
@@ -94,35 +95,22 @@ class _AddOrUpdateVisitState extends State<AddOrUpdateVisit> {
               isRequired: true,
             ),
             const SizedBox(height: 10),
-            BlocBuilder<GetCustomersCubit, GetCustomersState>(
-              builder: (context, state) {
-                return state.maybeWhen(
-                  orElse: () => const SizedBox.shrink(),
-                  error: (error) => FetchErrorWidget(
-                    error: error,
-                    onRetry: () {
-                      context.read<GetCustomersCubit>().getCustomers();
-                    },
-                  ),
-                  loaded: (customers) => InputFormField(
-                    hintText:
-                        '''Tap to select ${widget.isEdit ? 'Customer' : 'Customer Name'}''',
-                    controller: _customerNameController,
-                    readOnly: true,
-                    suffixIcon: const Icon(
-                      Icons.expand_more,
-                    ),
-                    onTap: () {
-                      GoRouter.of(context).push(
-                        RtmRouter.selectCustomer,
-                        extra: (Customer customer) {
-                          setState(() {
-                            _customerNameController.text = customer.name;
-                          });
-                        },
-                      );
-                    },
-                  ),
+            InputFormField(
+              hintText:
+                  '''Tap to select ${widget.isEdit ? 'Customer' : 'Customer Name'}''',
+              controller: _customerNameController,
+              readOnly: true,
+              suffixIcon: const Icon(
+                Icons.expand_more,
+              ),
+              onTap: () {
+                GoRouter.of(context).push(
+                  RtmRouter.selectCustomer,
+                  extra: (Customer customer) {
+                    setState(() {
+                      _customerNameController.text = customer.name;
+                    });
+                  },
                 );
               },
             ),
@@ -176,42 +164,26 @@ class _AddOrUpdateVisitState extends State<AddOrUpdateVisit> {
               isRequired: false,
             ),
             const SizedBox(height: 10),
-            BlocBuilder<GetActivitiesCubit, GetActivitiesState>(
-              builder: (context, state) {
-                return state.maybeWhen(
-                  orElse: () => const SizedBox.shrink(),
-                  error: (error) => FetchErrorWidget(
-                    error: error,
-                    onRetry: () {
-                      context.read<GetActivitiesCubit>().getActivities();
+            Column(
+              children: [
+                ...fetchedActivities.map((activity) {
+                  return CheckboxListTile(
+                    dense: true,
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 8),
+                    title: Text(activity.description),
+                    value: activitiesDone.contains(activity),
+                    onChanged: (value) {
+                      setState(() {
+                        if (value ?? false) {
+                          activitiesDone.add(activity);
+                        } else {
+                          activitiesDone.remove(activity);
+                        }
+                      });
                     },
-                  ),
-                  loaded: (activities) {
-                    return Column(
-                      children: [
-                        ...activities.map((activity) {
-                          return CheckboxListTile(
-                            dense: true,
-                            contentPadding:
-                                const EdgeInsets.symmetric(horizontal: 8),
-                            title: Text(activity.description),
-                            value: activitiesDone.contains(activity),
-                            onChanged: (value) {
-                              setState(() {
-                                if (value ?? false) {
-                                  activitiesDone.add(activity);
-                                } else {
-                                  activitiesDone.remove(activity);
-                                }
-                              });
-                            },
-                          );
-                        }),
-                      ],
-                    );
-                  },
-                );
-              },
+                  );
+                }),
+              ],
             ),
             const SizedBox(height: 15),
             const FormFieldLabel(

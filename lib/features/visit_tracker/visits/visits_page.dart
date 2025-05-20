@@ -6,10 +6,12 @@ import 'package:rtm/features/visit_tracker/cubit/_index.dart';
 import 'package:rtm/features/visit_tracker/visits/cubit/get_visits_cubit.dart';
 import 'package:rtm/features/visit_tracker/visits/data/models/visit.dart';
 import 'package:rtm/features/visit_tracker/visits/views/_index.dart';
+import 'package:rtm/shared/services/hive_service.dart';
 import 'package:rtm/shared/views/_index.dart';
 import 'package:rtm/utils/color_palette.dart';
 import 'package:rtm/utils/misc.dart';
 import 'package:rtm/utils/rtm_router.dart';
+import 'package:rtm/utils/singletons.dart';
 
 class VisitsPage extends StatefulWidget {
   const VisitsPage({super.key});
@@ -28,8 +30,6 @@ class _VisitsPageState extends State<VisitsPage> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      fetchData();
-
       _searchController.addListener(searchForm);
     });
   }
@@ -54,6 +54,14 @@ class _VisitsPageState extends State<VisitsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.kBackgroundColor,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // simulate logout
+          getIt<HiveService>().clearPrefs();
+          GoRouter.of(context).push(RtmRouter.decision);
+        },
+        child: const Icon(Icons.exit_to_app),
+      ),
       appBar: SingleTitleAppBar(
         title: 'Visits',
         isHome: true,
