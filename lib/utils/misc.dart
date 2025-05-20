@@ -14,6 +14,9 @@ class Misc {
   }
 
   static String displayToIso(String display) {
+    if (display.isEmpty) {
+      return '';
+    }
     final dt = DateFormat('EEE, MMMM d, yyyy - hh:mm a').parse(display);
     return dt.toIso8601String();
   }

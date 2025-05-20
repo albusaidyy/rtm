@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:logger/logger.dart';
 import 'package:rtm/features/visit_tracker/add_visit/cubit/cubit/add_or_update_visit_cubit.dart';
 import 'package:rtm/features/visit_tracker/add_visit/form_field_label.dart';
 import 'package:rtm/features/visit_tracker/add_visit/input_form_field.dart';
@@ -49,7 +48,6 @@ class _AddOrUpdateVisitState extends State<AddOrUpdateVisit> {
     fetchedCustomers = getIt<HiveService>().getCustomers();
 
     if (widget.isEdit) {
-      Logger().f(widget.visit?.visitDate);
       _customerNameController.text = widget.visit?.customerName ?? '';
       _statusController.text = widget.visit?.status ?? '';
       _locationController.text = widget.visit?.location ?? '';
@@ -99,12 +97,12 @@ class _AddOrUpdateVisitState extends State<AddOrUpdateVisit> {
               builder: (context, state) {
                 return state.maybeWhen(
                   loading: () => TextButton(
-                    onPressed: () => addOrUpdateVisit(isEdit: widget.isEdit),
+                    onPressed: () => {},
                     child: Text(
                       widget.isEdit ? 'Update...' : 'Submit...',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontFamily: 'Graphik',
-                        color: AppTheme.kPrimaryColor,
+                        color: AppTheme.kPrimaryColor.addOpacity(.5),
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
                       ),
@@ -309,51 +307,46 @@ class _AddOrUpdateVisitState extends State<AddOrUpdateVisit> {
   }
 
   void addOrUpdateVisit({bool isEdit = false}) {
-    try {
-      final fetchedVisits = getIt<HiveService>().getVisits();
+    final fetchedVisits = getIt<HiveService>().getVisits();
 
-      final customerId = fetchedCustomers
-          .firstWhere(
-            (customer) => customer.name == _customerNameController.text,
-            orElse: () => Customer(id: 0, name: '', createdAt: ''),
-          )
-          .id;
+    final customerId = fetchedCustomers
+        .firstWhere(
+          (customer) => customer.name == _customerNameController.text,
+          orElse: () => Customer(id: 0, name: '', createdAt: ''),
+        )
+        .id;
 
-      final activitiesDone = activitiesDoneNotifier.value
-          .map((activity) => activity.id)
-          .map((id) => id.toString())
-          .toList();
-      if (isEdit) {
-        getIt<HiveService>().persistVisitDetails(
-          Visit(
-            id: widget.visit?.id ?? 0,
-            customerId: customerId,
-            status: _statusController.text.trim(),
-            location: _locationController.text.trim(),
-            activitiesDone: activitiesDone,
-            notes: _notesController.text.trim(),
-            visitDate: Misc.displayToIso(_visitDateController.text.trim()),
-          ),
-        );
-      } else {
-        Logger().f(_visitDateController.text.trim());
-        getIt<HiveService>().persistVisitDetails(
-          Visit(
-            id: fetchedVisits.length + 1,
-            customerId: customerId,
-            status: _statusController.text.trim(),
-            location: _locationController.text.trim(),
-            activitiesDone: activitiesDone,
-            notes: _notesController.text.trim(),
-            visitDate: Misc.displayToIso(_visitDateController.text.trim()),
-            createdAt: DateTime.now().toIso8601String(),
-          ),
-        );
-      }
-      context.read<AddOrUpdateVisitCubit>().addOrUpdateVisit(isEdit: isEdit);
-    } catch (e) {
-      Logger().f(e);
+    final activitiesDone = activitiesDoneNotifier.value
+        .map((activity) => activity.id)
+        .map((id) => id.toString())
+        .toList();
+    if (isEdit) {
+      getIt<HiveService>().persistVisitDetails(
+        Visit(
+          id: widget.visit?.id ?? 0,
+          customerId: customerId,
+          status: _statusController.text.trim(),
+          location: _locationController.text.trim(),
+          activitiesDone: activitiesDone,
+          notes: _notesController.text.trim(),
+          visitDate: Misc.displayToIso(_visitDateController.text.trim()),
+        ),
+      );
+    } else {
+      getIt<HiveService>().persistVisitDetails(
+        Visit(
+          id: fetchedVisits.length + 1,
+          customerId: customerId,
+          status: _statusController.text.trim(),
+          location: _locationController.text.trim(),
+          activitiesDone: activitiesDone,
+          notes: _notesController.text.trim(),
+          visitDate: Misc.displayToIso(_visitDateController.text.trim()),
+          createdAt: DateTime.now().toIso8601String(),
+        ),
+      );
     }
+    context.read<AddOrUpdateVisitCubit>().addOrUpdateVisit(isEdit: isEdit);
   }
 
   Theme pickerTheme(BuildContext context, Widget? child) {

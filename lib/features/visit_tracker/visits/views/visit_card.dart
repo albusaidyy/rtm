@@ -191,7 +191,7 @@ class _VisitCardState extends State<VisitCard> {
                           child: Text(
                             widget.visit.status,
                             style: const TextStyle(
-                              fontSize: 14,
+                              fontSize: 13,
                               fontWeight: FontWeight.w600,
                               color: AppTheme.kBackgroundColor,
                             ),
