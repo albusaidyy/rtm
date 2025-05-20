@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rtm/features/visit_tracker/visits/data/models/edit_visit_dto.dart';
 import 'package:rtm/features/visit_tracker/visits/data/models/visit.dart';
-import 'package:rtm/utils/_index.dart' show RtmRouter;
+import 'package:rtm/utils/_index.dart' show OpacityParsing, RtmRouter;
 import 'package:rtm/utils/color_palette.dart';
 import 'package:rtm/utils/misc.dart';
 
@@ -48,17 +48,56 @@ class _VisitCardState extends State<VisitCard> {
               width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
               decoration: BoxDecoration(
-                color: AppTheme.kBackgroundColor,
+                color: AppTheme.kPrimaryColor.addOpacity(.1),
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(color: AppTheme.kSecondaryGreyColor),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                spacing: 6,
+                spacing: 10,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  Column(
+                    spacing: 2,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'Customer Name',
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.grey,
+                            ),
+                          ),
+                          PopupMenuButton<int>(
+                            iconSize: 12,
+                            child: const Icon(Icons.more_vert),
+                            itemBuilder: (context) => [
+                              PopupMenuItem(
+                                value: 1,
+                                onTap: () {
+                                  final editVisitDTO = EditVisitDTO(
+                                    visit: widget.visit,
+                                    isEdit: true,
+                                  );
+                                  GoRouter.of(context).push(
+                                    RtmRouter.addOrUpdateVisit,
+                                    extra: editVisitDTO,
+                                  );
+                                },
+                                child: const Text('Edit'),
+                              ),
+                              PopupMenuItem(
+                                value: 2,
+                                onTap: () {},
+                                child: const Text('Delete'),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                       Text(
                         widget.visit.customerName,
                         style: const TextStyle(
@@ -67,72 +106,62 @@ class _VisitCardState extends State<VisitCard> {
                           fontFamily: 'Graphik',
                         ),
                       ),
-                      InkWell(
-                        onTap: () {
-                          final editVisitDTO = EditVisitDTO(
-                            visit: widget.visit,
-                            isEdit: true,
-                          );
-                          GoRouter.of(context).push(
-                            RtmRouter.addOrUpdateVisit,
-                            extra: editVisitDTO,
-                          );
-                        },
-                        child: const Icon(
-                          Icons.edit,
-                          size: 16,
+                    ],
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    spacing: 2,
+                    children: [
+                      const Text(
+                        'Location',
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
                           color: Colors.grey,
                         ),
                       ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      const Icon(
-                        Icons.location_on,
-                        size: 15,
-                        color: Colors.grey,
-                      ),
                       Text(
                         widget.visit.location,
-                        style:
-                            const TextStyle(fontSize: 14, color: Colors.grey),
+                        style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'Graphik',
+                        ),
                       ),
                     ],
                   ),
-                  RichText(
-                    text: TextSpan(
-                      children: [
-                        const TextSpan(
-                          text: 'Notes: ',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.grey,
-                          ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    spacing: 2,
+                    children: [
+                      const Text(
+                        'Notes',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.grey,
                         ),
-                        TextSpan(
-                          text: widget.visit.notes,
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.grey,
-                          ),
+                      ),
+                      Text(
+                        widget.visit.notes,
+                        style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'Graphik',
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       RichText(
                         text: TextSpan(
                           children: [
                             const TextSpan(
-                              text: 'Visited on: ',
+                              text: 'Visited : ',
                               style: TextStyle(
-                                fontSize: 14,
+                                fontSize: 13,
                                 fontWeight: FontWeight.w600,
                                 color: Colors.grey,
                               ),
@@ -140,9 +169,10 @@ class _VisitCardState extends State<VisitCard> {
                             TextSpan(
                               text: Misc.formatDate(widget.visit.visitDate),
                               style: const TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.grey,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                fontFamily: 'Graphik',
+                                color: AppTheme.kBlackColor,
                               ),
                             ),
                           ],
@@ -161,7 +191,7 @@ class _VisitCardState extends State<VisitCard> {
                           child: Text(
                             widget.visit.status,
                             style: const TextStyle(
-                              fontSize: 13,
+                              fontSize: 14,
                               fontWeight: FontWeight.w600,
                               color: AppTheme.kBackgroundColor,
                             ),
