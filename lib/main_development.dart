@@ -13,7 +13,6 @@ Future<void> main() async {
           'iLCJpYXQiOjE3NDU5ODk5OTksImV4cCI6MjA2MTU2NTk5OX0.rwJSY4bJaNdB'
           '8jDn3YJJu_gKtznzm-dUKQb4OvRtP6c',
       hiveDBKey: 'rtm_development_2052',
-      primaryHiveDBKey: 'rtm_development_pr2052',
     ),
   );
   await bootstrap(() => const App());

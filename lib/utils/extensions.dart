@@ -17,5 +17,5 @@ extension DateTimeExtensions on DateTime {
   /// Returns a formatted string of the date in the format 'MMMM d, y'.
   /// Suitable for display purposes
   String toDateDisplayFormat() =>
-      DateFormat('EEEE, MMMM d, yyyy - hh:mm a').format(this);
+      DateFormat('EEE, MMMM d, yyyy - hh:mm a').format(this);
 }

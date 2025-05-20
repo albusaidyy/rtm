@@ -2,14 +2,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:rtm/features/visit_tracker/add_visit/cubit/cubit/add_or_update_visit_cubit.dart';
 import 'package:rtm/features/visit_tracker/cubit/_index.dart';
 import 'package:rtm/features/visit_tracker/visits/cubit/get_visits_cubit.dart';
 import 'package:rtm/features/visit_tracker/visits/data/models/visit.dart';
 import 'package:rtm/features/visit_tracker/visits/views/_index.dart';
+import 'package:rtm/shared/services/hive_service.dart';
 import 'package:rtm/shared/views/_index.dart';
 import 'package:rtm/utils/color_palette.dart';
 import 'package:rtm/utils/misc.dart';
 import 'package:rtm/utils/rtm_router.dart';
+import 'package:rtm/utils/singletons.dart';
 
 class VisitsPage extends StatefulWidget {
   const VisitsPage({super.key});
@@ -28,8 +31,6 @@ class _VisitsPageState extends State<VisitsPage> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      fetchData();
-
       _searchController.addListener(searchForm);
     });
   }
@@ -52,163 +53,198 @@ class _VisitsPageState extends State<VisitsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppTheme.kBackgroundColor,
-      appBar: SingleTitleAppBar(
-        title: 'Visits',
-        isHome: true,
-        actions: [
-          TextButton(
-            onPressed: () =>
-                GoRouter.of(context).push(RtmRouter.addOrUpdateVisit),
-            child: const Row(
-              children: [
-                Icon(
-                  CupertinoIcons.add,
-                  color: AppTheme.kPrimaryColor,
-                ),
-                Text(
-                  'Add',
-                  style: TextStyle(
-                    fontFamily: 'Graphik',
-                    color: AppTheme.kPrimaryColor,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
+    return BlocListener<AddOrUpdateVisitCubit, AddOrUpdateVisitState>(
+      listener: (context, state) {
+        state.maybeWhen(
+          success: (isEdit) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                backgroundColor: AppTheme.kCompletedColor,
+                content: Text(
+                  isEdit
+                      ? 'Visit updated successfully'
+                      : 'Visit created successfully',
+                  style: const TextStyle(
+                    color: AppTheme.kBackgroundColor,
                   ),
-                  textAlign: TextAlign.center,
                 ),
-              ],
-            ),
-          ),
-        ],
-      ),
-      body: BlocBuilder<GetCustomersCubit, GetCustomersState>(
-        builder: (context, state) {
-          return state.maybeWhen(
-            orElse: () => const LoadingWidget(message: 'Loading...'),
-            error: (error) => FetchErrorWidget(
-              error: error,
-              onRetry: fetchData,
-            ),
-            initial: () => const SizedBox.shrink(),
-            loading: () => const LoadingWidget(message: 'Loading...'),
-            loaded: (customers) {
-              return BlocBuilder<GetActivitiesCubit, GetActivitiesState>(
-                builder: (context, state) {
-                  return state.maybeWhen(
-                    error: (error) => FetchErrorWidget(
-                      error: error,
-                      onRetry: fetchData,
+              ),
+            );
+            //Refetches the data but would be ideal to update the existing data
+            // locallly
+            fetchData();
+          },
+          orElse: () {},
+        );
+      },
+      child: Scaffold(
+        backgroundColor: AppTheme.kBackgroundColor,
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            // simulate logout
+            getIt<HiveService>().clearPrefs();
+            GoRouter.of(context).push(RtmRouter.decision);
+          },
+          child: const Icon(Icons.exit_to_app),
+        ),
+        appBar: SingleTitleAppBar(
+          title: 'Visits',
+          isHome: true,
+          actions: [
+            TextButton(
+              onPressed: () =>
+                  GoRouter.of(context).push(RtmRouter.addOrUpdateVisit),
+              child: const Row(
+                children: [
+                  Icon(
+                    CupertinoIcons.add,
+                    color: AppTheme.kPrimaryColor,
+                  ),
+                  Text(
+                    'Add',
+                    style: TextStyle(
+                      fontFamily: 'Graphik',
+                      color: AppTheme.kPrimaryColor,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
                     ),
-                    orElse: () =>
-                        const LoadingWidget(message: 'Halfway through...'),
-                    initial: () => const SizedBox.shrink(),
-                    loading: () =>
-                        const LoadingWidget(message: 'Halfway through...'),
-                    loaded: (activities) {
-                      return BlocBuilder<GetVisitsCubit, GetVisitsState>(
-                        builder: (context, state) {
-                          return state.maybeWhen(
-                            error: (error) => FetchErrorWidget(
-                              error: error,
-                              onRetry: fetchData,
-                            ),
-                            orElse: () => const LoadingWidget(
-                              message: 'Almost done...',
-                            ),
-                            initial: () => const SizedBox.shrink(),
-                            loading: () => const LoadingWidget(
-                              message: 'Almost done...',
-                            ),
-                            loaded: (visits) {
-                              final mappedVisits = Misc.mapVisists(
-                                visits: visits,
-                                customers: customers,
-                                activities: activities,
-                              );
-                              final completedPercent = Misc.getStatusPercent(
-                                mappedVisits,
-                                'completed',
-                              );
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        body: BlocBuilder<GetCustomersCubit, GetCustomersState>(
+          builder: (context, state) {
+            return state.maybeWhen(
+              orElse: () => const LoadingWidget(message: 'Loading...'),
+              error: (error) => FetchErrorWidget(
+                error: error,
+                onRetry: fetchData,
+              ),
+              initial: () => const SizedBox.shrink(),
+              loading: () => const LoadingWidget(message: 'Loading...'),
+              loaded: (customers) {
+                return BlocBuilder<GetActivitiesCubit, GetActivitiesState>(
+                  builder: (context, state) {
+                    return state.maybeWhen(
+                      error: (error) => FetchErrorWidget(
+                        error: error,
+                        onRetry: fetchData,
+                      ),
+                      orElse: () =>
+                          const LoadingWidget(message: 'Halfway through...'),
+                      initial: () => const SizedBox.shrink(),
+                      loading: () =>
+                          const LoadingWidget(message: 'Halfway through...'),
+                      loaded: (activities) {
+                        return BlocBuilder<GetVisitsCubit, GetVisitsState>(
+                          builder: (context, state) {
+                            return state.maybeWhen(
+                              error: (error) => FetchErrorWidget(
+                                error: error,
+                                onRetry: fetchData,
+                              ),
+                              orElse: () => const LoadingWidget(
+                                message: 'Almost done...',
+                              ),
+                              initial: () => const SizedBox.shrink(),
+                              loading: () => const LoadingWidget(
+                                message: 'Almost done...',
+                              ),
+                              loaded: (visits) {
+                                final mappedVisits = Misc.mapVisists(
+                                  visits: visits,
+                                  customers: customers,
+                                  activities: activities,
+                                );
+                                final completedPercent = Misc.getStatusPercent(
+                                  mappedVisits,
+                                  'completed',
+                                );
 
-                              final pendingPercent = Misc.getStatusPercent(
-                                mappedVisits,
-                                'pending',
-                              );
+                                final pendingPercent = Misc.getStatusPercent(
+                                  mappedVisits,
+                                  'pending',
+                                );
 
-                              final cancelledPercent = Misc.getStatusPercent(
-                                mappedVisits,
-                                'cancelled',
-                              );
-                              visitsNotifier.value =
-                                  mappedVisits.reversed.toList();
+                                final cancelledPercent = Misc.getStatusPercent(
+                                  mappedVisits,
+                                  'cancelled',
+                                );
+                                visitsNotifier.value =
+                                    mappedVisits.reversed.toList();
 
-                              searchForm();
+                                searchForm();
 
-                              return Column(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 16,
-                                      vertical: 12,
+                                return Column(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 16,
+                                        vertical: 12,
+                                      ),
+                                      child: VisitStatWidget(
+                                        completedPercent: completedPercent,
+                                        pendingPercent: pendingPercent,
+                                        cancelledPercent: cancelledPercent,
+                                      ),
                                     ),
-                                    child: VisitStatWidget(
-                                      completedPercent: completedPercent,
-                                      pendingPercent: pendingPercent,
-                                      cancelledPercent: cancelledPercent,
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Column(
-                                      children: [
-                                        const SizedBox(height: 12),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 12,
-                                          ),
-                                          child: SizedBox(
-                                            height: 40,
-                                            child: SearchFormField(
-                                              hintText: 'Search by name',
-                                              controller: _searchController,
+                                    Expanded(
+                                      child: Column(
+                                        children: [
+                                          const SizedBox(height: 12),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 12,
+                                            ),
+                                            child: SizedBox(
+                                              height: 40,
+                                              child: SearchFormField(
+                                                hintText: 'Search by name',
+                                                controller: _searchController,
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                        const SizedBox(height: 15),
-                                        Expanded(
-                                          child: ValueListenableBuilder<
-                                              List<CustomerVisit>>(
-                                            valueListenable: searchNotifier,
-                                            builder: (context, displayList, _) {
-                                              return ListView.builder(
-                                                itemCount: displayList.length,
-                                                itemBuilder: (context, index) {
-                                                  final visit =
-                                                      displayList[index];
-                                                  return VisitCard(
-                                                    visit: visit,
-                                                  );
-                                                },
-                                              );
-                                            },
+                                          const SizedBox(height: 15),
+                                          Expanded(
+                                            child: ValueListenableBuilder<
+                                                List<CustomerVisit>>(
+                                              valueListenable: searchNotifier,
+                                              builder:
+                                                  (context, displayList, _) {
+                                                return ListView.builder(
+                                                  itemCount: displayList.length,
+                                                  itemBuilder:
+                                                      (context, index) {
+                                                    final visit =
+                                                        displayList[index];
+                                                    return VisitCard(
+                                                      visit: visit,
+                                                    );
+                                                  },
+                                                );
+                                              },
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        },
-                      );
-                    },
-                  );
-                },
-              );
-            },
-          );
-        },
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                        );
+                      },
+                    );
+                  },
+                );
+              },
+            );
+          },
+        ),
       ),
     );
   }

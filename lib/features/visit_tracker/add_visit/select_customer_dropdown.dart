@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:rtm/features/visit_tracker/cubit/_index.dart';
 import 'package:rtm/features/visit_tracker/data/_index.dart';
+import 'package:rtm/shared/services/hive_service.dart';
 import 'package:rtm/utils/_index.dart';
+import 'package:rtm/utils/singletons.dart';
 
-class SelectCustomerDropdown extends StatefulWidget {
+class SelectCustomerDropdown extends StatelessWidget {
   const SelectCustomerDropdown({
     required this.selectedCustomer,
     super.key,
@@ -14,24 +14,9 @@ class SelectCustomerDropdown extends StatefulWidget {
   final void Function(Customer customer) selectedCustomer;
 
   @override
-  State<SelectCustomerDropdown> createState() => _SelectCustomerDropdownState();
-}
-
-class _SelectCustomerDropdownState extends State<SelectCustomerDropdown> {
-  late List<Customer> customers;
-
-  @override
-  void initState() {
-    super.initState();
-
-    customers = context.read<GetCustomersCubit>().state.maybeWhen(
-          orElse: () => const [],
-          loaded: (customers) => customers,
-        );
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final customers = getIt<HiveService>().getCustomers();
+
     return Scaffold(
       backgroundColor: AppTheme.kBackgroundColor,
       appBar: AppBar(
@@ -72,7 +57,7 @@ class _SelectCustomerDropdownState extends State<SelectCustomerDropdown> {
             for (final customer in customers) ...[
               InkWell(
                 onTap: () {
-                  widget.selectedCustomer(customer);
+                  selectedCustomer(customer);
                   GoRouter.of(context).pop();
                 },
                 child: Text(

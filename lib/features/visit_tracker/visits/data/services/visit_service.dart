@@ -5,6 +5,7 @@ abstract class VisitService {
   Future<List<Visit>> getVisits();
   // Other visit services like create, update, delete, etc.
   Future<String> createVisit(Visit visit);
+  Future<String> updateVisit(Visit visit);
 }
 
 class VisitServiceImpl implements VisitService {
@@ -27,8 +28,21 @@ class VisitServiceImpl implements VisitService {
   @override
   Future<String> createVisit(Visit visit) async {
     try {
-      await supabase.from('visits').insert(visit.toJson());
+      await supabase.from('visits').insert(visit.toJson()..remove('id'));
       return 'Visit created successfully';
+    } on Exception catch (_) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<String> updateVisit(Visit visit) async {
+    try {
+      await supabase
+          .from('visits')
+          .update(visit.toJson()..remove('id'))
+          .eq('id', visit.id);
+      return 'Visit updated successfully';
     } on Exception catch (_) {
       rethrow;
     }
