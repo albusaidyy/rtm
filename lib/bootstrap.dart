@@ -7,6 +7,7 @@ import 'package:rtm/features/visit_tracker/cubit/_index.dart';
 import 'package:rtm/features/visit_tracker/data/_index.dart';
 import 'package:rtm/features/visit_tracker/visits/cubit/get_visits_cubit.dart';
 import 'package:rtm/features/visit_tracker/visits/data/services/visit_service.dart';
+import 'package:rtm/shared/services/hive_service.dart';
 import 'package:rtm/utils/rtm_config.dart';
 import 'package:rtm/utils/singletons.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -43,6 +44,15 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
   };
 
   setupSingletons();
+    try {
+    await getIt<HiveService>().initBoxes();
+  } on Exception catch (_) {
+    await getIt<HiveService>().resetDatabase();
+  } on Object catch (_) {
+    // This will catch Error types (including TypeError)
+    // and any other non-Exception objects
+    await getIt<HiveService>().resetDatabase();
+  }
 
   Bloc.observer = const AppBlocObserver();
   // Add cross-flavor configuration here

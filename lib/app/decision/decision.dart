@@ -45,8 +45,8 @@ class _DecisionPageState extends State<DecisionPage>
   @override
   Widget build(BuildContext context) {
     // simulating authentication
-    bool? user;
-    user = true;
+    // final user = getIt<HiveService>().getAuthData();
+    const user = true;
     if (user == true) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         GoRouter.of(context).go(RtmRouter.visits);
