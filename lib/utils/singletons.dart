@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:rtm/features/visit_tracker/add_visit/cubit/cubit/add_or_update_visit_cubit.dart';
 import 'package:rtm/features/visit_tracker/cubit/_index.dart';
 import 'package:rtm/features/visit_tracker/data/services/activity_services.dart';
 import 'package:rtm/features/visit_tracker/data/services/customer_services.dart';
@@ -34,6 +35,12 @@ class Singletons {
         BlocProvider(
           create: (_) => GetActivitiesCubit(
             activityService: getIt<ActivityService>(),
+            hiveService: getIt<HiveService>(),
+          ),
+        ),
+        BlocProvider(
+          create: (_) => AddOrUpdateVisitCubit(
+            visitService: getIt<VisitService>(),
             hiveService: getIt<HiveService>(),
           ),
         ),
