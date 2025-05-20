@@ -28,7 +28,7 @@ The application is built to simulate the Visit tracking operation with the follo
 ## Architectural choices 
 ### State Management and Navigation
 - Bloc/cubit - Simplicity and ease of use to handle global state
-- ValueListenables - handles local state
+- ValueNotifiers - handles local state
 - Hive databases to handle App state and data interactions between components 
 - GoRouter - handles the scalability of the project in the near future
   
