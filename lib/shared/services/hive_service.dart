@@ -26,6 +26,10 @@ abstract class HiveService {
   void persistActivities(List<Activity> activities);
   List<Activity> getActivities();
   void clearActivities();
+
+  void persistVisitDetails(Visit visitDetails);
+  Visit getVisitDetails();
+  void clearVisitDetails();
 }
 
 class HiveServiceImpl implements HiveService {
@@ -40,7 +44,7 @@ class HiveServiceImpl implements HiveService {
     await Hive.initFlutter(_hiveDBKey);
     // auth
     Hive
-      ..registerAdapter(AuthenticatedUserAdapter())
+      // ..registerAdapter(AuthenticatedUserAdapter())
       ..registerAdapter(VisitAdapter())
       ..registerAdapter(CustomerAdapter())
       ..registerAdapter(ActivityAdapter());
@@ -120,5 +124,20 @@ class HiveServiceImpl implements HiveService {
   @override
   void clearActivities() {
     Hive.box<dynamic>(_hiveDBKey).delete('remote_activities');
+  }
+
+  @override
+  void persistVisitDetails(Visit visitDetails) {
+    Hive.box<dynamic>(_hiveDBKey).put('visit_details', visitDetails);
+  }
+
+  @override
+  Visit getVisitDetails() {
+    return Hive.box<dynamic>(_hiveDBKey).get('visit_details') as Visit;
+  }
+
+  @override
+  void clearVisitDetails() {
+    Hive.box<dynamic>(_hiveDBKey).delete('visit_details');
   }
 }

@@ -3,26 +3,25 @@ import 'dart:convert';
 import 'package:hive_flutter/adapters.dart';
 import 'package:rtm/features/visit_tracker/data/_index.dart';
 import 'package:rtm/features/visit_tracker/visits/data/models/visit.dart';
-import 'package:rtm/shared/models/local/_index.dart';
 
-class AuthenticatedUserAdapter extends TypeAdapter<AuthenticatedUser> {
-  @override
-  final typeId = 0;
+// class AuthenticatedUserAdapter extends TypeAdapter<AuthenticatedUser> {
+//   @override
+//   final typeId = 0;
 
-  @override
-  AuthenticatedUser read(BinaryReader reader) {
-    return AuthenticatedUser.fromJson(
-      Map<String, dynamic>.of(
-        json.decode(reader.read() as String) as Map<String, dynamic>,
-      ),
-    );
-  }
+//   @override
+//   AuthenticatedUser read(BinaryReader reader) {
+//     return AuthenticatedUser.fromJson(
+//       Map<String, dynamic>.of(
+//         json.decode(reader.read() as String) as Map<String, dynamic>,
+//       ),
+//     );
+//   }
 
-  @override
-  void write(BinaryWriter writer, AuthenticatedUser obj) {
-    writer.write(json.encode(obj.toJson()));
-  }
-}
+//   @override
+//   void write(BinaryWriter writer, AuthenticatedUser obj) {
+//     writer.write(json.encode(obj.toJson()));
+//   }
+// }
 
 class VisitAdapter extends TypeAdapter<Visit> {
   @override

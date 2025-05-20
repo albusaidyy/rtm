@@ -79,8 +79,8 @@ class _DecisionPageState extends State<DecisionPage>
       //     Future.delayed(const Duration(seconds: 3), () {
       //       if (!context.mounted) return;
       GoRouter.of(context).go(RtmRouter.visits);
-    // });
-      });
+      // });
+    });
     // }
 
     return Scaffold(
