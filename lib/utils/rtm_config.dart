@@ -4,13 +4,11 @@ class RtmValues {
     required this.baseDomain,
     required this.supabaseAnonKey,
     required this.hiveDBKey,
-    required this.primaryHiveDBKey,
   });
 
   final String urlScheme;
   final String supabaseAnonKey;
   final String hiveDBKey;
-  final String primaryHiveDBKey;
   final String baseDomain;
 }
 
