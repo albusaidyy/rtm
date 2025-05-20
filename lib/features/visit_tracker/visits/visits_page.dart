@@ -1,3 +1,4 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -55,7 +56,7 @@ class _VisitsPageState extends State<VisitsPage> {
     return Scaffold(
       backgroundColor: AppTheme.kBackgroundColor,
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
+        onPressed: ()  {
           // simulate logout
           getIt<HiveService>().clearPrefs();
           GoRouter.of(context).push(RtmRouter.decision);

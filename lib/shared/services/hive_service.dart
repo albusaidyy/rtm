@@ -14,7 +14,6 @@ abstract class HiveService {
 
   void setAuthData(AuthenticatedUser user);
   AuthenticatedUser? getAuthData();
-  void clearAuthData();
 
   void persistVisits(List<Visit> visits);
   List<Visit> getVisits();
@@ -35,6 +34,7 @@ class HiveServiceImpl implements HiveService {
   }
 
   late String _hiveDBKey;
+
   @override
   Future<void> initBoxes() async {
     await Hive.initFlutter(_hiveDBKey);
@@ -44,6 +44,10 @@ class HiveServiceImpl implements HiveService {
       ..registerAdapter(VisitAdapter())
       ..registerAdapter(CustomerAdapter())
       ..registerAdapter(ActivityAdapter());
+
+    if (!Hive.isBoxOpen(_hiveDBKey)) {
+      await Hive.openBox<dynamic>(_hiveDBKey);
+    }
   }
 
   @override
@@ -69,11 +73,6 @@ class HiveServiceImpl implements HiveService {
   AuthenticatedUser? getAuthData() {
     final box = Hive.box<dynamic>(_hiveDBKey);
     return box.get('user') as AuthenticatedUser?;
-  }
-
-  @override
-  void clearAuthData() {
-    Hive.box<dynamic>(_hiveDBKey).delete('user');
   }
 
   @override
