@@ -4,24 +4,52 @@ version: 1.0.0+1
 publish_to: none
 
 environment:
-  sdk: ^3.5.0
+  sdk: ">=3.6.0 <4.0.0"
 
 dependencies:
-  bloc: ^8.1.4
+  bloc: ^9.0.0
+  cupertino_icons: ^1.0.6
   flutter:
     sdk: flutter
-  flutter_bloc: ^8.1.6
+  flutter_bloc: ^9.0.0
+  flutter_launcher_icons: ^0.14.3
   flutter_localizations:
     sdk: flutter
+  freezed: ^2.5.2
+  freezed_annotation: ^2.4.1
+  get_it: ^8.0.3
+  go_router: ^15.1.2
   intl: ^0.19.0
+  json_annotation: ^4.9.0
+  logger: ^2.5.0
+  supabase_flutter: ^2.9.0
 
 dev_dependencies:
-  bloc_test: ^9.1.7
+  bloc_test: ^10.0.0
+  build_runner: ^2.4.9
   flutter_test:
     sdk: flutter
+  json_serializable: ^6.9.5
   mocktail: ^1.0.4
-  very_good_analysis: ^6.0.0
+  very_good_analysis: ^7.0.0
 
 flutter:
   uses-material-design: true
   generate: true
+  assets:
+    - assets/app_icon/
+  fonts:
+    - family: Graphik
+      fonts:
+        - asset: assets/fonts/Graphik/Graphik Medium.otf
+          weight: 500
+        - asset: assets/fonts/Graphik/Graphik Semibold.otf
+        - asset: assets/fonts/Graphik/GraphikBold.otf
+          weight: 700
+    - family: Helvetica Neue
+      fonts:
+        - asset: assets/fonts/Helvetica Neue/Helvetica Neue 67 Medium Condensed.otf
+        - asset: assets/fonts/Helvetica Neue/Helvetica Neue Regular.otf
+          weight: 500
+        - asset: assets/fonts/Helvetica Neue/HelveticaNeue Medium.ttf
+          weight: 600

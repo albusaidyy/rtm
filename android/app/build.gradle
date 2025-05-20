@@ -31,7 +31,6 @@ if (keystorePropertiesFile.exists()) {
 android {
     namespace "com.albusaidy.org.rtm"
     compileSdkVersion flutter.compileSdkVersion
-    ndkVersion flutter.ndkVersion
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -111,5 +110,5 @@ flutter {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.20"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.1.0"
 }
