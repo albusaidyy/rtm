@@ -49,6 +49,7 @@ class _AddOrUpdateVisitState extends State<AddOrUpdateVisit> {
     fetchedCustomers = getIt<HiveService>().getCustomers();
 
     if (widget.isEdit) {
+      Logger().f(widget.visit?.visitDate);
       _customerNameController.text = widget.visit?.customerName ?? '';
       _statusController.text = widget.visit?.status ?? '';
       _locationController.text = widget.visit?.location ?? '';
@@ -331,11 +332,11 @@ class _AddOrUpdateVisitState extends State<AddOrUpdateVisit> {
             location: _locationController.text.trim(),
             activitiesDone: activitiesDone,
             notes: _notesController.text.trim(),
-            visitDate:
-                _visitDateController.text.trim().toIso8601StringFromDisplay(),
+            visitDate: Misc.displayToIso(_visitDateController.text.trim()),
           ),
         );
       } else {
+        Logger().f(_visitDateController.text.trim());
         getIt<HiveService>().persistVisitDetails(
           Visit(
             id: fetchedVisits.length + 1,
@@ -344,8 +345,7 @@ class _AddOrUpdateVisitState extends State<AddOrUpdateVisit> {
             location: _locationController.text.trim(),
             activitiesDone: activitiesDone,
             notes: _notesController.text.trim(),
-            visitDate:
-                _visitDateController.text.trim().toIso8601StringFromDisplay(),
+            visitDate: Misc.displayToIso(_visitDateController.text.trim()),
             createdAt: DateTime.now().toIso8601String(),
           ),
         );
